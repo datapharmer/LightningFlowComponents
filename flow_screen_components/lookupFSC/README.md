@@ -8,7 +8,7 @@ This is a simple adaptation of the excellent [Lightning Lookup control](https://
 
 ## Install this Component Into Your Org ##
 
-[Install this Component](https://sites.google.com/view/flowunofficial/flow-screen-components/lookup).
+[Install this Component](https://unofficialsf.com/lookup/).
 
 
 
@@ -23,32 +23,78 @@ Filter using a SOQL 'where' clause
 This allows richer filtering. See 'Where Clause Usage' below
 
 Dependent Filtering
+
 You can stick two of these components on a screen and have the second component filter on the selection set in the first component. See example 2 
 below
 
+Multiple Dependent Filtering
+
+You can include multiple Parent/Child groupings on a single screen by identifying each Parent component with a unique ID and specifying the related Parent ID for each Child component.
 
 This component exposes the following attributes that can be set in Flow:
 
-label="I1_Object Name" This is the actual object that will be looked up
+Basic Attributes
+- label="I1_Object Name" This is the actual object that will be looked up
+- label="I2_Display Which Field?" This is the field that will show up in the list box to represent a record. It defaults to "Name"
+- label="I3_Field Label"  This is just the label that appears next to the lookup control
+- label="I4_Output Which Field as Value?" This is the field you actually want saved into the Output Value attribute. It defaults to Id so you can hav ean Id to use for lookups, but you may want to change it to Name or some other value.
+- label="O1_Output Value" This will hold the value that is selected, for use downstream in the flow.  If a value is provided as an Input parameter, it will be passed to the O1_Output Value Output parameter if no record is selected.
 
-label="I2_Display Which Field?" This is the field that will show up in the list box to represent a record. It's usually set to "Name"
+Advanced Attributes
 
-label="I3_Field Label"  This is just the label that appears next to the lookup control
+- label="I5_'Parent' or 'Child' Lookup?" If Child is entered, the filter value will be replaced by the value returned by the Parent lookup on the same screen. 
 
-label="I4_Output Which Field as Value?" Here you can set which field you actually want saved into the Output Value attribute.
+- label="I6_Filter on which field?" This is the name of the field to filter the lookup on.
 
-label="I5_'Parent' or 'Child' Lookup?" If Child is entered, the filter value will be replaced by the value returned by the Parent lookup on the same screen. 
+- label="I7_Filter Value" This is the filter value for the lookup.
 
-label="I6_Filter on which field?" This is the name of the field to filter the lookup on.
+- label="Where Clause" allows the input of a "where" SOQL style filter to limit which values are available for selection.
 
-label="I7_Filter Value" This is the filter value for the lookup.
+- label="Default" You can specify a default value **placeholder** in the lookup field
 
-label="O1_Output Value" This will hold the selection field. 
+- label="Component ID"  You can group multiple Parent/Child components on a single Flow screen.  Add a unique value here for each Parent Lookup.
 
-label="Where Clause" allows the input of a "where" SOQL style filter to limit which values are available for selection.
+- label="Parent ID"  For a Child Lookup, enter the Component ID of its Parent Lookup here to link them together.
 
 Here's an example of a configured component:
 <img width="353" alt="screen shot 2018-02-11 at 8 48 18 pm" src="https://user-images.githubusercontent.com/3140883/36083917-ed8c32ca-0f6c-11e8-956d-82c674a92495.png">
+
+## NEW PARAMETER - Default Value Usage ##
+
+**OPTION 1**
+
+You can enter a default value for the input field (I2_Display Which Field).  When provided, it will override any WhereClause and display the default value as Placeholder text in the input field.  You will still need to select the dropdown then select the single value that is displayed. If you start to overtype the input field, the default value will be cleared and the WhereClause (if provided) will be reset and the field will act like a normal filtered lookup with search.
+
+
+**OPTION 2**
+
+Provide INPUT values for the following two parameters:
+
+**Default Value:** (whatever placeholder text you want displayed in the input box - this should match the format of the I2_Display Which Field? parameter)
+
+**O1_Output Value:** The value to be passed out through the O1_Output Value OUTPUT parameter if no value is selected in the input box (This should match the format of the I4_Output Which Field as Value? paraameter)
+
+
+**Example:**  Looking up an Account, defaulting to the Account Name of "ACME Company".  Assume the RecordId for ACME Company is stored in the flow variable vDefaultId.
+
+
+**[Input Section]**
+- API Name: AcctLookup
+- Component ID: 
+- **Default Value: ACME Company**
+- I1_Object Name: Account
+- I2_Display Which Field? Name
+- I3_Field Label: Account
+- I4_Output Which Field as Value? Id
+- I5_ Parent or Child Lookup? 
+- I6_Filter on which field? 
+- I7_Filter Value: 
+- **O1_Output Value: {!vDefaultId}**
+
+
+**[Output Section]** 
+- O1_Output Value: {!vSelectedAccountId} (a text variable)
+
 
 
 ## Where Clause Usage ##
@@ -66,6 +112,7 @@ Example 1: Lookup a Case filtered by an Account where the ID is passed into the 
 Example 2: Lookup an Account and a Contact on the same screen and only select from Contacts from the selected Account
 
 <img width="384" alt="screen shot 2018-04-15 at 10 18 06 am" src="https://user-images.githubusercontent.com/3140883/38781180-5c2e98b2-4096-11e8-9275-99cefdfc53c6.png">    
+
 
 ## Resources ##
 

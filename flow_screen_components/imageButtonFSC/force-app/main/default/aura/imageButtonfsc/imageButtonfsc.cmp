@@ -1,11 +1,27 @@
+<!-- Updated by Eric Smith - 11/28/18 
+
+		Added the option to add up to two additional images
+		One is for when the mouse is hovered over the image
+		The other for when the mouse button is pressed while over the image
+		
+		This allows for 3-phase or 3D type image buttons to be supported
+
+        12/8/18 - Eric Smith - Added Image Clicked? output attribute for parity with the Navigation component
+
+-->
+
 <aura:component implements="lightning:availableForFlowScreens" access="global">
     <aura:attribute name="imageName" type="string"  />
-    
+    <aura:attribute name="imageNameHover" type="string"  />
+    <aura:attribute name="imageNamePress" type="string"  />
     <aura:attribute name="imageAlt" type="string"  />
-    <aura:attribute name="imageWidth" type="string"  />
-    <aura:attribute name="imageHeight" type="string"  />
    
     <!-- Style -->
+    <aura:attribute name="styleWidth" type="string" default="" />
+    <aura:attribute name="styleHeight" type="string" default="" />
+    <aura:attribute name="styleMaxWidth" type="string" default="" />
+    <aura:attribute name="styleMaxHeight" type="string" default="" />
+    
     <aura:attribute name="styleBorderRadius" type="string" default="0" />
     <aura:attribute name="styleBorderStyle" type="string" default="solid" />
     <aura:attribute name="styleBorderWidth" type="string" default="0px" />
@@ -35,6 +51,7 @@
     <aura:attribute name="destinationObjectView" type="string"  />
     <aura:attribute name="destinationWebUrl" type="string"  />
     <aura:attribute name="destinationFlowTransition" type="string"  />
+    <aura:attribute name="fire" type="Boolean" default="false" />
     
     <!-- Internal -->
     <aura:attribute name="imageSourceString" type="string"  />
@@ -45,7 +62,9 @@
     
 	<span class="main"  >
         <img src="{! v.imageSourceString }" alt="{! v.imageAlt }"
-              style="{! v.styleText}" onclick="{!c.handleClick}"/> 
+              style="{! v.styleText}" onclick="{!c.handleClick}"
+              onmouseover="{!c.handleMouseOver}" onmouseout="{!c.handleMouseOut}"
+              onmousedown="{!c.handleMouseDown}" onmouseup="{!c.handleMouseUp}"/> 
     </span>
 	
 

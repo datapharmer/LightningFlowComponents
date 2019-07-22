@@ -4,8 +4,7 @@
 
 
 ## How It Works ##
-[Documentation](https://sites.google.com/view/flowunofficial/flow-screen-components/navigation-button/documentation-navigation-button)
-[Install](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tB000000066f3)
+[Documentation]( https://unofficialsf.com/fsc-navigation-button/#top)
 
 ## Resources ##
 
