@@ -122,6 +122,8 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             var searchWhereClause = component.get("v.searchWhereClause");
             console.log(searchWhereClause);
             var displayedFieldName = component.get("v.displayedFieldName");
+            //Added searchFieldName
+            var searchFieldName = component.get("v.searchFieldName");
             var valueFieldName = component.get("v.valueFieldName");
             if(!document.getElementById(component.getGlobalId() + "_myinput")){
                 return;
@@ -134,10 +136,10 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             var whereClause = component.get("v.whereClause");
             var filteredFieldName = component.get("v.filteredFieldName");
             var filterFieldValue = component.get("v.filterFieldValue");
-            var isParent = (component.get('v.parentChild') == 'Parent');
-            var isChild = (component.get('v.parentChild') == 'Child');
+            var isParent = (component.get('v.parentChild') == 'Parent' || component.get('v.parentChild') == 'Both');
+            var isChild = (component.get('v.parentChild') == 'Child' || component.get('v.parentChild') == 'Both');
             console.log('hlpGetRecords: I1_'+ sObjectName + ' I2_' + displayedFieldName + ' isI_' + isInit + ' isP_' + isParent +
-                        ' isC_' + isChild + ' I6_' + filteredFieldName + ' I7_' + filterFieldValue + ' M_' + component.get("v.masterFilterValue") + 
+                        ' isC_' + isChild + ' I6_' + filteredFieldName + ' I7_' + filterFieldValue +' I8_' + searchFieldName + ' M_' + component.get("v.masterFilterValue") + 
                         ' W_' + whereClause + ' D_' + component.get("v.defaultValue"));
             
             if(isChild){
@@ -257,6 +259,8 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             // selectedName is tied to the value of the input, we should save what the user has typed and restore
             // it after we change selectedName
             var searchString = document.getElementById(component.getGlobalId() + "_myinput").value;
+            //Added searchFieldName
+            var searchFieldName = component.get("v.searchFieldName");
             console.log(searchString);
             this.clearField(component,false);
             document.getElementById(component.getGlobalId() + "_myinput").value = searchString;
@@ -278,6 +282,10 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             else{
                 var searchWhereClause = component.get("v.displayedFieldName") + " LIKE '%" +
                     searchString.replace(/'/g,'\\\'') + "%'";
+                //If searchFieldName is set use that instead of displayedFieldName
+                if(!$A.util.isUndefinedOrNull(searchFieldName)){
+                    searchWhereClause = searchFieldName +" LIKE '%" + searchString.replace(/'/g,'\\\'') + "%'";
+                }
                 component.set("v.searchWhereClause", searchWhereClause);	
             }
             
@@ -298,7 +306,7 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             var matchedListDisplay = component.get("v.matchedListDisplay");
             var matchedListValue = component.get("v.matchedListValue");
             var matchedListRecords = component.get("v.matchedListRecords");
-            var isParent = (component.get("v.parentChild") == 'Parent');
+            var isParent = (component.get("v.parentChild") == 'Parent' || component.get('v.parentChild') == 'Both');
             component.set("v.selectedRecord", matchedListRecords[index]);
             component.set("v.selectedValue", matchedListValue[index]);
             if(matchedListDisplay[index].toLowerCase() != 'no records found!'){

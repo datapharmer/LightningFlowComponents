@@ -28,7 +28,9 @@
                 		fieldName : cmp.get('v.column'+i.toString().substring(1)+'_fieldName') + 'class'
                 	}
             		:
-            		{};
+                    {};
+                    
+                var vEditable = (cmp.get('v.column'+i.toString().substring(1)+'_editable') == true);
             	                             
                 cols.push({
                     iconName: varIcon,
@@ -40,7 +42,8 @@
                     cellAttributes: {
                         alignment: cmp.get('v.column'+i.toString().substring(1)+'_align'),
                         class: cellClass                        	
-                    }
+                    },
+                    editable: vEditable
                 });                                   
             }
         }
@@ -97,7 +100,9 @@
             list.push(rows[i].Id);
         }
         cmp.set('v.preSelectedIds', list);
-        
+
+        // Save pre-edit data
+        cmp.set('v.saveMydata', cmp.get('v.mydata'));
     },
 
     // Return Selected Table Rows
@@ -141,5 +146,22 @@
         cmp.set("v.sortedDirection", sortDirection);
         helper.sortData(cmp, fieldName, sortDirection);
     },
+
+    handleSave: function(cmp, event, helper) {
+        helper.updateEditedValues(cmp, event);
+        if(cmp.get('v.showButtons')) {
+            // Clear Buttons from the Table
+            cmp.find('flowTable').set('v.draftValues', null);
+            // Save current table data values
+            cmp.set('v.saveMydata', cmp.get('v.mydata'));
+        }
+    },
+
+    cancelChanges: function (cmp, event, helper) {
+        // Clear Buttons from the Table
+        cmp.find('flowTable').set('v.draftValues', null);
+        // Replace current table data values with the saved values
+        cmp.set('v.mydata', cmp.get('v.saveMydata'));
+    },    
     
 })
